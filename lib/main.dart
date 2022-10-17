@@ -7,32 +7,47 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        home: RandomWords(), 
-        );
+      home: RandomWords(),
+    );
   }
 }
+
 class RandomWords extends StatefulWidget {
   @override
   RandomWordsState createState() => RandomWordsState();
 }
-class RandomWordsState extends State<RandomWords>{
+
+class RandomWordsState extends State<RandomWords> {
   final randomWordsList = <WordPair>[];
-  Widget ListRandomWords{
-    return ListView(
+
+  Widget _buildList() {
+    return ListView.builder(
       padding: const EdgeInsets.all(16.0),
-      itemBuilder: (context, item){
-        if(item.isOdd) return Divider();
+      itemBuilder: (context, item) {
+        if (item.isOdd) return Divider();
         final index = item ~/ 2;
-        if(index >= RandomWordsState.length){
+        if (index >= randomWordsList.length) {
           randomWordsList.addAll(generateWordPairs().take(10));
         }
-      }
+        return _buildRow(randomWordsList[index]);
+      },
     );
   }
+
+  Widget _buildRow(WordPair pair) {
+    return ListTile(
+      title: Text(
+        pair.asPascalCase,
+        style: TextStyle(fontSize: 18.0),
+      ),
+    );
+  }
+
   @override
-  Widget build(BuildContext context){
-    return Scaffold(appBar: AppBar(title: Text("Wordpair")),
-    body: Center(child: ListRandomWords),
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Wordpair")),
+      body: _buildList(),
     );
   }
 }
