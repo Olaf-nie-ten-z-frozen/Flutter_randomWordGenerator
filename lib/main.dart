@@ -7,6 +7,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       home: RandomWords(),
     );
   }
@@ -19,6 +20,7 @@ class RandomWords extends StatefulWidget {
 
 class RandomWordsState extends State<RandomWords> {
   final randomWordsList = <WordPair>[];
+  final _savedWordsPairs = Set<WordPair>();
 
   Widget _buildList() {
     return ListView.builder(
@@ -35,12 +37,21 @@ class RandomWordsState extends State<RandomWords> {
   }
 
   Widget _buildRow(WordPair pair) {
+    final alreadySaved = _savedWordsPairs.contains(pair);
     return ListTile(
-      title: Text(
-        pair.asPascalCase,
-        style: TextStyle(fontSize: 18.0),
-      ),
-    );
+        title: Text(pair.asPascalCase, style: TextStyle(fontSize: 18.0)),
+        trailing: Icon(alreadySaved ? Icons.favorite : Icons.favorite_border,
+            color: alreadySaved ? Colors.red : null),
+        // ignore: dead_code
+        onTap: () {
+          setState(() {
+            if (alreadySaved) {
+              _savedWordsPairs.remove(pair);
+            } else {
+              _savedWordsPairs.add(pair);
+            }
+          });
+        });
   }
 
   @override
