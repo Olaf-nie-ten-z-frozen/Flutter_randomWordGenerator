@@ -54,10 +54,50 @@ class RandomWordsState extends State<RandomWords> {
         });
   }
 
+  void _pushSaved() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (BuildContext context) {
+          final Iterable<ListTile> tiles = _savedWordsPairs.map(
+            (WordPair pair) {
+              return ListTile(
+                title: Text(pair.asPascalCase,
+                    style: TextStyle(
+                        fontSize: 19.0,
+                        color: Colors.red,
+                        fontWeight: FontWeight.bold)),
+              );
+            },
+          );
+          final List<Widget> divided = ListTile.divideTiles(
+            context: context,
+            tiles: tiles,
+          ).toList();
+          return Scaffold(
+            appBar: AppBar(
+              title: Text('Beloved Words'),
+            ),
+            body: ListView(children: divided),
+          );
+        },
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Wordpair")),
+      appBar: AppBar(
+        title: Text("Wordpair"),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.view_list_rounded),
+            onPressed: () {
+              _pushSaved();
+            },
+          )
+        ],
+      ),
       body: _buildList(),
     );
   }
